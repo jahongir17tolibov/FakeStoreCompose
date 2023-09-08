@@ -5,8 +5,7 @@ import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.googlefonts.GoogleFont
 import com.jt17.fakestorecompose.R
 
-
-fun primaryFont(): FontFamily {
+fun primaryFont(font: String = "Syne"): FontFamily {
 
     val provider = GoogleFont.Provider(
         providerAuthority = "com.google.android.gms.fonts",
@@ -14,12 +13,10 @@ fun primaryFont(): FontFamily {
         certificates = R.array.com_google_android_gms_fonts_certs
     )
 
-    val fontSaira = GoogleFont(name = "Syne")
+    val mainFont = GoogleFont(name = font)
 
-    val primaryFont = FontFamily(
-        Font(googleFont = fontSaira, fontProvider = provider)
+    return FontFamily(
+        Font(googleFont = mainFont, fontProvider = provider)
     )
-
-    return primaryFont
 
 }

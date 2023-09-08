@@ -1,4 +1,4 @@
-package com.jt17.fakestorecompose.presentation.screens.bottomnav
+package com.jt17.fakestorecompose.presentation.screens.bottom_nav
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
