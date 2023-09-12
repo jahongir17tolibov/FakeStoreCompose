@@ -20,7 +20,7 @@ open class BaseViewModel(
     override val baseState: StateFlow<BaseContract.BaseState>
         get() = mutableBaseState.asStateFlow()
 
-    protected val baseEffectChannel = Channel<BaseContract.BaseEffect>(Channel.UNLIMITED)
+    private val baseEffectChannel = Channel<BaseContract.BaseEffect>(Channel.UNLIMITED)
     override val baseEffect: Flow<BaseContract.BaseEffect>
         get() = baseEffectChannel.receiveAsFlow()
 

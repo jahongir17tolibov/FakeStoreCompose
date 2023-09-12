@@ -9,13 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.jt17.fakestorecompose.core.base.BaseViewModel
+import com.jt17.fakestorecompose.core.navigation.graph.authNavGraph
 import com.jt17.fakestorecompose.core.navigation.graph.bottomNavGraph
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun SetupNavHost(
     navController: NavHostController,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     onProvideBaseViewModel: (baseViewModel: BaseViewModel) -> Unit,
 ) {
 
@@ -29,6 +30,12 @@ fun SetupNavHost(
 
         //bottom navigation bars screens graph
         bottomNavGraph(
+            navController = navController,
+            onProvideBaseViewModel = onProvideBaseViewModel
+        )
+
+        //authentication screens graph
+        authNavGraph(
             navController = navController,
             onProvideBaseViewModel = onProvideBaseViewModel
         )

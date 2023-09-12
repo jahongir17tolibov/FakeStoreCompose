@@ -2,60 +2,119 @@ package com.jt17.fakestorecompose.presentation.screens.bottom_nav
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.gestures.ScrollableDefaults
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.jt17.fakestorecompose.core.ui.components.primaryFont
+import com.jt17.fakestorecompose.core.base.BaseRoute
+import com.jt17.fakestorecompose.core.base.BaseViewModel
+import com.jt17.fakestorecompose.core.base.use
+import com.jt17.fakestorecompose.core.ui.components.ProductsListItem
 import com.jt17.fakestorecompose.core.ui.theme.FakeStoreComposeTheme
+import com.jt17.fakestorecompose.domain.model.Products
+import com.jt17.fakestorecompose.presentation.screens.contracts.HomeContract
+import com.jt17.fakestorecompose.presentation.viewmodel.HomeViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
-fun HomeScreen(navController: NavHostController) = FakeStoreComposeTheme {
+fun HomeScreenRoute(
+    viewModel: HomeViewModel = koinViewModel(),
+    onProvideBaseViewModel: (baseViewModel: BaseViewModel) -> Unit,
+) {
+
+    val (state, event) = use(viewModel = viewModel)
+
+    LaunchedEffect(key1 = Unit) {
+        onProvideBaseViewModel(viewModel)
+        event.invoke(HomeContract.Event.OnGetProductsList)
+    }
+
+    BaseRoute(baseViewModel = viewModel) {
+        HomeScreen(
+            productsListState = state,
+            onFavouriteClick = {
+                event.invoke(HomeContract.Event.OnFavouriteClick(it))
+            },
+            onLoading = {
+                event.invoke(HomeContract.Event.OnLoading)
+            },
+        )
+    }
+
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@RequiresApi(Build.VERSION_CODES.P)
+@Composable
+fun HomeScreen(
+    productsListState: HomeContract.State,
+    onFavouriteClick: (product: Products) -> Unit,
+    onLoading: () -> Unit
+) = FakeStoreComposeTheme {
 
     val lazyListState = rememberLazyListState()
-    val scrollState = rememberScrollState()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
 
-        LazyColumn(
-            modifier = Modifier,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            state = lazyListState,
-            flingBehavior = ScrollableDefaults.flingBehavior()
+        AnimatedVisibility(
+            visible = productsListState.onLoading.not(),
+            enter = fadeIn(animationSpec = tween(1700, easing = LinearEasing)),
+            exit = fadeOut(animationSpec = tween(1700, easing = LinearEasing))
         ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                state = lazyListState
+            ) {
+                items(items = productsListState.productsList, key = { it.id }) { products ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .animateItemPlacement(
+                                animationSpec = tween(
+                                    durationMillis = 300,
+                                    easing = LinearOutSlowInEasing
+                                )
+                            )
+                    ) {
+                        val expendedState by rememberSaveable { mutableStateOf(false) }
+                        ProductsListItem(
+                            products = products,
+                            onFavouriteClick = {
+                                onFavouriteClick(products)
+                            },
+                            expendedState = expendedState
+                        )
+                    }
 
-            items(count = 20) {
-                Text(
-                    text = "Home screen $it",
-                    modifier = Modifier.padding(24.dp),
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 20.sp,
-                    fontFamily = primaryFont()
-                )
+                }
+
             }
-
-
         }
-
 
     }
 
@@ -66,7 +125,7 @@ fun HomeScreen(navController: NavHostController) = FakeStoreComposeTheme {
 @Composable
 fun HomeScreenPreview() {
 
-    HomeScreen(navController = rememberNavController())
+//    HomeScreen(navController = rememberNavController())
 
 }
 

@@ -4,8 +4,10 @@ import com.jt17.fakestorecompose.core.dispatcher.DispatcherProvider
 import com.jt17.fakestorecompose.core.dispatcher.PlatformDispatcherProvider
 import com.jt17.fakestorecompose.domain.repository.FakeStoreRepository
 import com.jt17.fakestorecompose.domain.repository.FakeStoreRepositoryImpl
+import com.jt17.fakestorecompose.domain.use_case.GetFavouriteProductsListUseCase
 import com.jt17.fakestorecompose.domain.use_case.SyncStoreProductsUseCase
 import com.jt17.fakestorecompose.domain.use_case.GetStoreProductsUseCase
+import com.jt17.fakestorecompose.domain.use_case.ToggleFavouriteProductUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -21,8 +23,12 @@ val appModule = module {
 
     single { FakeStoreRepositoryImpl(get(), get()) } bind FakeStoreRepository::class
 
-    singleOf(::GetStoreProductsUseCase)
+    single { GetStoreProductsUseCase(get()) }
 
-    singleOf(::SyncStoreProductsUseCase)
+    single { SyncStoreProductsUseCase(get()) }
+
+    single { ToggleFavouriteProductUseCase(get()) }
+
+    single { GetFavouriteProductsListUseCase(get()) }
 
 }

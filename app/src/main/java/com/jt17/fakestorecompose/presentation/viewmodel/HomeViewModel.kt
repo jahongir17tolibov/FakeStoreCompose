@@ -4,10 +4,12 @@ import androidx.lifecycle.viewModelScope
 import com.jt17.fakestorecompose.core.base.BaseContract
 import com.jt17.fakestorecompose.core.base.BaseViewModel
 import com.jt17.fakestorecompose.core.dispatcher.DispatcherProvider
-import com.jt17.fakestorecompose.domain.model.Resource
+import com.jt17.fakestorecompose.domain.model.Products
+import com.jt17.fakestorecompose.domain.use_case.GetFavouriteProductsListUseCase
 import com.jt17.fakestorecompose.domain.use_case.SyncStoreProductsUseCase
 import com.jt17.fakestorecompose.domain.use_case.GetStoreProductsUseCase
-import com.jt17.fakestorecompose.presentation.screens.contracts.HomeScreenContract
+import com.jt17.fakestorecompose.domain.use_case.ToggleFavouriteProductUseCase
+import com.jt17.fakestorecompose.presentation.screens.contracts.HomeContract
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,15 +23,17 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val getStoreProductsUseCase: GetStoreProductsUseCase,
     private val syncStoreProductsUseCase: SyncStoreProductsUseCase,
-    dispatcherProvider: DispatcherProvider
-) : BaseViewModel(dispatcherProvider), HomeScreenContract {
+    private val toggleFavouriteProductUseCase: ToggleFavouriteProductUseCase,
+    dispatcherProvider: DispatcherProvider,
+) : BaseViewModel(dispatcherProvider), HomeContract {
 
-    private val mutableState = MutableStateFlow(HomeScreenContract.State())
-    override val state: StateFlow<HomeScreenContract.State> get() = mutableState.asStateFlow()
+    private val mutableState = MutableStateFlow(HomeContract.State())
+    override val state: StateFlow<HomeContract.State> get() = mutableState.asStateFlow()
 
-    override fun event(event: HomeScreenContract.Event) = when (event) {
-        HomeScreenContract.Event.OnGetProductsList -> getData()
-        HomeScreenContract.Event.OnLoading -> getData(isLoading = true)
+    override fun event(event: HomeContract.Event) = when (event) {
+        HomeContract.Event.OnGetProductsList -> getData()
+        HomeContract.Event.OnLoading -> getData(isLoading = true)
+        is HomeContract.Event.OnFavouriteClick -> onFavouriteClick(product = event.product)
     }
 
     private fun getData(isLoading: Boolean = false) {
@@ -38,6 +42,7 @@ class HomeViewModel(
                 it.copy(onLoading = true)
             }
         }
+
 
         viewModelScope.launch {
             getProductsList()
@@ -73,6 +78,14 @@ class HomeViewModel(
                     )
                 }
             }.launchIn(viewModelScope)
+    }
+
+    private fun onFavouriteClick(product: Products) {
+        viewModelScope.launch {
+            onIO {
+                toggleFavouriteProductUseCase(product)
+            }
+        }
     }
 
 }

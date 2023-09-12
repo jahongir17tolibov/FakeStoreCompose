@@ -12,9 +12,10 @@ val dataModule = module {
             context = androidApplication(),
             klass = FakeStoreDatabase::class.java,
             name = FakeStoreDatabase.DATABASE_NAME,
-        )
+        ).fallbackToDestructiveMigration()
+            .build()
     }
 
-    single { get<FakeStoreDatabase>().storeDao }
+    single { get<FakeStoreDatabase>().storeDao() }
 
 }

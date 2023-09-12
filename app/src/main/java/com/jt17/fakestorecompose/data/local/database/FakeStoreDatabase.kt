@@ -10,7 +10,7 @@ import com.jt17.fakestorecompose.data.local.dto.LocalStoreProductsDto
 )
 abstract class FakeStoreDatabase : RoomDatabase() {
 
-    abstract val storeDao: FakeStoreDao
+    abstract fun storeDao(): FakeStoreDao
 
     companion object {
         const val DATABASE_NAME = "fake_store_db"

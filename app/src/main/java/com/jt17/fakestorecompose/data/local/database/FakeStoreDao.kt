@@ -16,6 +16,9 @@ interface FakeStoreDao {
     @Query("SELECT * FROM store_products ORDER BY id ASC")
     fun getProductsList(): Flow<List<LocalStoreProductsDto>>
 
+    @Query("SELECT * FROM store_products WHERE isFavourite ORDER BY title ASC")
+    fun getFavouriteProductsList(): Flow<List<LocalStoreProductsDto>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProductsList(localStore: LocalStoreProductsDto)
 

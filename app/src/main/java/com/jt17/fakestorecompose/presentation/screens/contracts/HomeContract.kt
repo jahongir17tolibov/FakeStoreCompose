@@ -5,8 +5,7 @@ import com.jt17.fakestorecompose.domain.model.Products
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 
-interface HomeScreenContract :
-    UnidirectionalViewModel<HomeScreenContract.State, HomeScreenContract.Event> {
+interface HomeContract : UnidirectionalViewModel<HomeContract.State, HomeContract.Event> {
 
     data class State(
         val productsList: PersistentList<Products> = persistentListOf(),
@@ -16,6 +15,7 @@ interface HomeScreenContract :
     sealed interface Event {
         data object OnGetProductsList : Event
         data object OnLoading : Event
+        data class OnFavouriteClick(val product: Products) : Event
     }
 
 }

@@ -3,7 +3,6 @@ package com.jt17.fakestorecompose.core.navigation
 import com.jt17.fakestorecompose.R
 
 internal const val BOTTOM_NAV_ROUTE = "Bottom_navigation_screens"
-internal const val ROOT_ROUTE = "navigation_root"
 
 internal const val HOME_SCREEN_ROUTE = "home_screen"
 internal const val CART_SCREEN_ROUTE = "cart_screen"

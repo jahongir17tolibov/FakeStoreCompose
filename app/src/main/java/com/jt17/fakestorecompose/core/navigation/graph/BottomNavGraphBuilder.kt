@@ -10,7 +10,9 @@ import com.jt17.fakestorecompose.core.base.BaseViewModel
 import com.jt17.fakestorecompose.core.navigation.BOTTOM_NAV_ROUTE
 import com.jt17.fakestorecompose.core.navigation.BottomNavBarDestinations
 import com.jt17.fakestorecompose.presentation.screens.bottom_nav.CartScreen
+import com.jt17.fakestorecompose.presentation.screens.bottom_nav.FavouritesScreen
 import com.jt17.fakestorecompose.presentation.screens.bottom_nav.HomeScreen
+import com.jt17.fakestorecompose.presentation.screens.bottom_nav.HomeScreenRoute
 import com.jt17.fakestorecompose.presentation.screens.bottom_nav.ProfileScreen
 
 
@@ -26,7 +28,7 @@ fun NavGraphBuilder.bottomNavGraph(
     ) {
 
         composable(route = BottomNavBarDestinations.Home.route) {
-            HomeScreen(navController = navController)
+            HomeScreenRoute(onProvideBaseViewModel = onProvideBaseViewModel)
         }
 
         composable(route = BottomNavBarDestinations.Cart.route) {
