@@ -37,7 +37,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
-fun HomeScreenRoute(
+fun HomeRoute(
     viewModel: HomeViewModel = koinViewModel(),
     onProvideBaseViewModel: (baseViewModel: BaseViewModel) -> Unit,
 ) {

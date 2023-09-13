@@ -41,7 +41,7 @@ class FakeStoreRepositoryImpl(
         dao.insertProductsList(product)
     }
 
-    override suspend fun loginToStore(username: String, password: String): Flow<Resource<Login>> =
+    override fun loginToStore(username: String, password: String): Flow<Resource<Login>> =
         flow {
             try {
                 val request = api.loginToStore(username = username, password = password).toLogin()

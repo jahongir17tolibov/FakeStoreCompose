@@ -12,8 +12,6 @@ interface LoginContract : UnidirectionalViewModel<LoginContract.State, LoginCont
     )
 
     sealed interface Event {
-        data object OnGetLoginToken : Event
-        data object OnLoading : Event
         data class SetLoginUserData(val loginUserData: LoginUserData) : Event
     }
 

@@ -18,6 +18,6 @@ interface FakeStoreRepository {
 
     suspend fun toggleFavouriteProducts(oldProducts: Products)
 
-    suspend fun loginToStore(username: String, password: String): Flow<Resource<Login>>
+    fun loginToStore(username: String, password: String): Flow<Resource<Login>>
 
 }

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class LoginToStoreUseCase(private val repository: FakeStoreRepository) {
 
-    suspend operator fun invoke(username: String, password: String): Flow<Resource<Login>> =
+    operator fun invoke(username: String, password: String): Flow<Resource<Login>> =
         repository.loginToStore(username = username, password = password)
 
 }
